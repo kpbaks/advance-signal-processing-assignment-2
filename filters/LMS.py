@@ -4,14 +4,14 @@ from dataclasses import dataclass
 from utils import window_iter, is_row_vector
 
 @dataclass
-class LmsResult:
+class Result:
     y: np.ndarray
     err: np.ndarray
     w: np.ndarray
 
 
 # desired signal is ecg
-def lms_filter(x: np.ndarray, d: np.ndarray, mu: float, ntaps: int, w0: np.ndarray = None) -> LmsResult:
+def lms(x: np.ndarray, d: np.ndarray, mu: float, ntaps: int, w0: np.ndarray = None) -> Result:
     """LMS filter.
 
     x: input signal, shape (N,)
@@ -52,5 +52,5 @@ def lms_filter(x: np.ndarray, d: np.ndarray, mu: float, ntaps: int, w0: np.ndarr
         ws[i] = w
         
         
-    return LmsResult(y, err, ws)
+    return Result(y, err, ws)
     
