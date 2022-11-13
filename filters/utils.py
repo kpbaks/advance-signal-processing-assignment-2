@@ -1,20 +1,30 @@
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 import scipy as sp
 
 
-# signal to noise ratio
-def snr(x: np.ndarray, x_ref: np.ndarray) -> float:
+def signaltonoise(a, axis=0, ddof=0):
     """
-    Compute the signal to noise ratio of a signal.
-    :param x: signal
-    :param x_ref: reference signal
-    :return: signal to noise ratio
+    Signal to noise ratio. (equivalent to scipy.stats.signaltonoise)
+    :param a: array_like
+    :param axis: axis along which the standard deviation is computed, default is 0
+    :param ddof: degrees of freedom
+    :return: the signal to noise ratio
     """
-    return 10 * np.log10(np.sum(x_ref ** 2) / np.sum((x - x_ref) ** 2))
+    a = np.asanyarray(a)
+    m = a.mean(axis)
+    sd = a.std(axis=axis, ddof=ddof)
+    return np.where(sd == 0, 0, m/sd)
 
-# snr = 10 * np.log10(np.sum(ecg**2) / np.sum(err**2))
 
+def SNR(signal, noise) -> float:
+    """
+    Compute the signal to noise ratio (SNR) of a signal.
+    :param signal: the signal
+    :param noise: the noise
+    :return: the SNR in dB
+    """
+    return 10 * np.log10(np.sum(signal**2) / np.sum(noise**2))
 
 
 def autocorr(x: np.ndarray, biased: bool = True) -> np.ndarray:

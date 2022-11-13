@@ -1,13 +1,16 @@
 import numpy as np
 from dataclasses import dataclass
 
-from utils import window_iter, is_row_vector
+from filters.utils import window_iter, is_row_vector
 
 @dataclass
 class Result:
     y: np.ndarray
     err: np.ndarray
     w: np.ndarray
+    mse: np.ndarray # mean squared error
+
+
 
 
 # desired signal is ecg
@@ -42,15 +45,21 @@ def lms(x: np.ndarray, d: np.ndarray, mu: float, ntaps: int, w0: np.ndarray = No
     # weights are stored and returned, so the caller can inspect and plot them
     ws = np.zeros((iterations, ntaps))
 
+    mse = np.zeros(iterations)
+
     for i, x_window in enumerate(window_iter(x, ntaps)):
         # compute output
         y[i] = np.dot(w, x_window)
         # compute error and save it
         err[i] = d[i] - y[i] # when y is equal to x, then we will get 
+
+        # compute mean squared error and save it
+        mse[i] = np.mean(err[:i] ** 2)
+
         # update weights        
         w += mu * 2 * err[i] * x_window
         ws[i] = w
         
         
-    return Result(y, err, ws)
+    return Result(y, err, ws, mse)
     

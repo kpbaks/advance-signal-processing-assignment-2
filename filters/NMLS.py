@@ -11,7 +11,7 @@ Functions:
 import numpy as np
 from dataclasses import dataclass
 
-from utils import window_iter, is_row_vector
+from filters.utils import window_iter, is_row_vector
 
 @dataclass
 class Result:
@@ -65,7 +65,7 @@ def nlms(x: np.ndarray, d: np.ndarray, mu: float, n_taps: int, w0: np.ndarray = 
         # compute error and save it
         err[i] = d[i] - y[i]
         # compute mean squared error and save it
-        mse[i] = np.mean(err[i] ** 2)
+        mse[i] = np.mean(err[:i] ** 2)
         # update weights
         # NOTE: this is where nlms differs from lms
         # the step size is divided by the norm of the input signal
