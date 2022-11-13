@@ -7,7 +7,7 @@ from filters.utils import window_iter, is_row_vector
 class Result:
     y: np.ndarray
     err: np.ndarray
-    w: np.ndarray
+    weights: np.ndarray
     mse: np.ndarray # mean squared error
 
 
@@ -32,7 +32,8 @@ def lms(x: np.ndarray, d: np.ndarray, mu: float, ntaps: int, w0: np.ndarray = No
 
     # initialize weights
     if w0 is None:
-        w = np.zeros(ntaps)
+        # w = np.zeros(ntaps)
+        w = np.random.rand(ntaps)
     else:
         assert w0.shape == (ntaps,), 'w0 must have shape (ntaps,)'
         w = w0
@@ -54,7 +55,10 @@ def lms(x: np.ndarray, d: np.ndarray, mu: float, ntaps: int, w0: np.ndarray = No
         err[i] = d[i] - y[i] # when y is equal to x, then we will get 
 
         # compute mean squared error and save it
-        mse[i] = np.mean(err[:i] ** 2)
+        if i == 0:
+            mse[i] = err[i]**2
+        else:
+            mse[i] = np.mean(err[:i]**2)
 
         # update weights        
         w += mu * 2 * err[i] * x_window

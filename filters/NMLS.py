@@ -11,6 +11,7 @@ Functions:
 import numpy as np
 from dataclasses import dataclass
 
+
 from filters.utils import window_iter, is_row_vector
 
 @dataclass
